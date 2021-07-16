@@ -39,7 +39,7 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/logout`}>Sair</a>
+          <Link href={`/logout`}>Sair</Link>
           <div>
             <input placeholder="Pesquisar no Orkut" />
           </div>
@@ -224,10 +224,10 @@ export function AlurakutProfileSidebarMenuDefault() {
           <img src={`${BASE_URL}/icons/plus.svg`} />
           GitHub Trends
         </a>
-        <a href="/logout">
-          <img src={`${BASE_URL}//icons/logout.svg`} />
+        <Link href="/logout">
+          <img src={`${BASE_URL}/icons/logout.svg`} />
           Sair
-        </a>
+        </Link>
       </nav>
     </AlurakutProfileSidebarMenuDefault.Wrapper>
   );

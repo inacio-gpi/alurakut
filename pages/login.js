@@ -50,7 +50,9 @@ export default function LoginScreen() {
                 const token = dadosDaResposta.token;
                 nookies.set(null, 'USER_TOKEN', token, {
                   path: '/',
-                  maxAge: 86400 * 7,
+                  // maxAge: 86400 * 7,
+                  maxAge: 60 * 60,
+                  // maxAge: 10,
                 });
                 router.push('/');
               });
