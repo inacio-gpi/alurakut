@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
+import { parseCookies, setCookie, destroyCookie } from 'nookies';
 
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
@@ -12,7 +13,11 @@ function Link({ href, children, ...props }) {
     </NextLink>
   );
 }
-
+function handleLogOut(event) {
+  event.preventDefault();
+  // Destroy
+  destroyCookie(null, 'USER_TOKEN')
+}
 // ================================================================================================================
 // Menu
 // ================================================================================================================
@@ -39,7 +44,7 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <Link href={`/logout`}>Sair</Link>
+          <Link href={`/logout`} onClick={handleLogOut}>Sair</Link>
           <div>
             <input placeholder="Pesquisar no Orkut" />
           </div>
@@ -224,7 +229,7 @@ export function AlurakutProfileSidebarMenuDefault() {
           <img src={`${BASE_URL}/icons/plus.svg`} />
           GitHub Trends
         </a>
-        <Link href="/logout">
+        <Link href="/logout" onClick={handleLogOut}>
           <img src={`${BASE_URL}/icons/logout.svg`} />
           Sair
         </Link>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 // Hook do NextJS
 import { useRouter } from 'next/router';
 import nookies from 'nookies';
+import jwt from 'jsonwebtoken';
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -37,26 +38,53 @@ export default function LoginScreen() {
         <section className="formArea">
           <form
             className="box"
-            onSubmit={(infosDoEvento) => {
-              infosDoEvento.preventDefault();
-              fetch('https://alurakut.vercel.app/api/login', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ githubUser: githubUser }),
-              }).then(async (respostaDoServer) => {
-                const dadosDaResposta = await respostaDoServer.json();
-                const token = dadosDaResposta.token;
-                nookies.set(null, 'USER_TOKEN', token, {
-                  path: '/',
-                  // maxAge: 86400 * 7,
-                  maxAge: 60 * 60,
-                  // maxAge: 10,
-                });
-                router.push('/');
-              });
+            onSubmit={(event) => {
+              event.preventDefault();
+              // console.log(githubUser);
+              fetch(`https://api.github.com/users/${githubUser}`).then(
+                async (result) => {
+                  const dadosDaResposta = await result.json();
+                  if (dadosDaResposta.message == 'Not Found') {
+                    // nao encontrado..
+                  } else {
+                    const token = jwt.sign(
+                      {
+                        githubUser: githubUser,
+                      },
+                      'senha',
+                      {
+                        expiresIn: '1h',
+                      }
+                    );
+                    nookies.set(null, 'USER_TOKEN', token, {
+                      path: '/',
+                      // maxAge: 86400 * 7,
+                      maxAge: 60 * 60, //  60s * 60s == 1hr
+                      // maxAge: 10,
+                    });
+                    router.push('/');
+                  }
+                }
+              );
             }}
+
+            // fetch('https://alurakut.vercel.app/api/login', {
+            //   method: 'POST',
+            //   headers: {
+            //     'Content-Type': 'application/json',
+            //   },
+            //   body: JSON.stringify({ githubUser: githubUser }),
+            // }).then(async (respostaDoServer) => {
+            //   const dadosDaResposta = await respostaDoServer.json();
+            //   const token = dadosDaResposta.token;
+            //   nookies.set(null, 'USER_TOKEN', token, {
+            //     path: '/',
+            //     // maxAge: 86400 * 7,
+            //     maxAge: 60 * 60,
+            //     // maxAge: 10,
+            //   });
+            //   router.push('/');
+            // });
           >
             <p>
               Acesse agora mesmo com seu usuário do <strong>GitHub</strong>!
